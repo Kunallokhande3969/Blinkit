@@ -1,0 +1,54 @@
+<%- include('./partials/header'); %>
+
+
+
+<body class="bg-[#f1f3f6] flex items-center justify-center h-screen">
+
+  
+
+    <div class="w-full max-w-sm bg-white rounded-lg shadow-lg p-8">
+
+        <div class="flex justify-center mb-6">
+            <img src="https://imgs.search.brave.com/cotoZwnhYPDOlJRzyP2lB1h4tQ-CE-0HxYsNk2yywtk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMud2lraWEubm9j/b29raWUubmV0L2xv/Z29wZWRpYS9pbWFn/ZXMvYS9hZi9CbGlu/a2l0X2xvZ28uc3Zn/L3JldmlzaW9uL2xh/dGVzdC9zY2FsZS10/by13aWR0aC1kb3du/LzI4MD9jYj0yMDIx/MTIxNDEwMTg1Mw" alt="Blinkit Logo" class="h-12">
+        </div>
+
+     
+        <h2 class="text-2xl font-semibold text-center text-gray-800">Admin Login</h2>
+
+        <form autocomplete="off" class="mt-8 space-y-6" action="/admin/login" method="POST">
+            <div class="rounded-md shadow-sm -space-y-px">
+            
+                <div>
+                    <label for="email" class="sr-only">Email address</label>
+                    <input id="email" name="email" type="email" required
+                        class="appearance-none rounded-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-[#008000] focus:border-[#008000] focus:z-10 sm:text-sm"
+                        placeholder="Email address">
+                </div>
+              
+                <div>
+                    <label for="password" class="sr-only">Password</label>
+                    <input id="password" name="password" type="password" required
+                        class="appearance-none rounded-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-[#008000] focus:border-[#008000] focus:z-10 sm:text-sm"
+                        placeholder="Password">
+                </div>
+            </div>
+
+      
+            <div class="flex items-center justify-between">
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-[#008000] hover:text-[#005000]">Forgot your password?</a>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit"
+                    class="group relative w-full flex justify-center py-3 px-4 mb-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#008000] hover:bg-[#005000] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#008000]">
+                    Sign in
+                </button>
+                <a href="/products"> <h1 class="text-blue-600  border-b  border-blue-600 inline pb-1 ">Back</h1></a>
+            </div>
+        </form>
+    </div>
+</body>
+
+<%- include('./partials/footer'); %>

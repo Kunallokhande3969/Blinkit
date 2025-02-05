@@ -1,0 +1,66 @@
+<%- include('./partials/header'); %>
+
+<body class="bg-gray-50 font-sans">
+    <div class="flex flex-col min-h-screen">
+    
+        <header class="bg-white shadow-md">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold text-blue-600"><a href="/admin/dashboard"><i class="ri-arrow-left-s-line"></i></a> Product Management</h1>
+            </div>
+        </header>
+
+     
+        <main class="flex-1 overflow-y-auto">
+            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+                <div class="mb-6">
+                    <form action="/admin/products/search" method="GET" class="flex">
+                        <input type="text" name="product_id" placeholder="Search by Product ID"
+                            class="w-full p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <button type="submit"
+                            class="bg-green-600 text-white py-2 px-4 rounded-r-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            Search
+                        </button>
+                    </form>
+                </div>
+
+                <% for (let key in products) { %>
+
+ 
+                    <div class="bg-white shadow-lg rounded-lg mb-6 p-6">
+                        <H1 class="mb-5 text-2xl">All products which you created.</H1>
+                        <h2 class="text-2xl font-semibold text-gray-800 capitalize">
+                            <%= key %>
+                        </h2>
+                        <% products[key].forEach(function(elem) { %>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                                <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                                    <img class=" h-40 object-cover rounded-md mb-3"
+                                        src="data:image/png;base64, <%= elem.image.toString('base64') %>" alt="<%= elem.name %>">
+                                    <h3 class="text-lg font-medium text-gray-900">
+                                        <%= elem.name %>
+                                    </h3>
+                                    <p class="mt-2 text-gray-600">₹<%= elem.price %></p>
+                                    <p class="mt-2 text-sm text-gray-600">Stock: <%= elem.stock %> pcs</p>
+                                    <p class="mt-2 text-xs text-gray-500"><%= elem.description %></p>
+                                    <p class="mt-2 text-xs text-gray-500">Product ID: <%= elem._id %></p>
+                                    <div class="mt-4 flex gap-4">
+                                        <a href="/products/delete/<%= elem._id %>"
+                                            class="inline-block text-red-600 hover:text-red-800">Delete Product</a>
+                                      
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+
+                        <div class="mt-4 text-center">
+                            <a href="/admin/products?category=&page=2"
+                                class="text-green-600 hover:text-green-800">See More</a>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+    </div>
+</body>
+
+<%- include('./partials/footer'); %>

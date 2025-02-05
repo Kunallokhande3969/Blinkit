@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Route Map with OSM Geocoding and Real-Time Location</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        #header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+     
+        #inputs {
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+       
+        #suggestions {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 5px;
+        }
+
+        .autocomplete-suggestion {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .autocomplete-suggestion:hover {
+            background-color: #f0f0f0;
+        }
+
+      
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        
+        @media (max-width: 600px) {
+            #inputs {
+                padding: 15px;
+
+            }
+
+            input[type="text"],
+            input[type="submit"] {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="header" class="w-full">
+        <h1>Leaflet Map</h1>
+    </div>
+
+    <div id="inputs" class="w-full">
+        <form method="post" action="/order/address/<%= orderid %>">
+            <label for="end">Destination:</label>
+            <input type="text" name="address" id="end" placeholder="Enter destination" required>
+            <div id="suggestions" class="autocomplete-suggestions"></div>
+            <input type="submit" value="Get Order">
+        </form>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <script>
+        let startLatLng, endLatLng;
+        let userMarker;
+
+        const map = L.map('map').setView([20.5937, 78.9629], 5); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(position => {
+                startLatLng = L.latLng(position.coords.latitude, position.coords.longitude);
+
+                if (userMarker) {
+                    userMarker.setLatLng(startLatLng).update();
+                } else {
+                    userMarker = L.marker(startLatLng).addTo(map)
+                        .bindPopup("You are here").openPopup();
+                }
+
+                map.setView(startLatLng, 13);
+            }, error => {
+                console.error("Error watching position:", error);
+            }, {
+                enableHighAccuracy: true,
+                timeout: 30000,
+                maximumAge: 0
+            });
+        }
+
+        const endInput = document.getElementById('end');
+        const suggestionsContainer = document.getElementById('suggestions');
+        const geocoder = L.Control.Geocoder.nominatim();
+
+        endInput.addEventListener('input', function () {
+            geocoder.geocode(endInput.value, function (results) {
+                suggestionsContainer.innerHTML = '';
+                results.forEach(function (result) {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.className = 'autocomplete-suggestion';
+                    suggestionItem.innerText = result.name;
+                    suggestionItem.addEventListener('click', function () {
+                        endInput.value = result.name;
+                        endLatLng = result.center;
+                        suggestionsContainer.innerHTML = '';
+                        generateRoute();
+                    });
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+            });
+        });
+
+        function generateRoute() {
+            if (!startLatLng || !endLatLng) {
+                alert("Please select valid locations.");
+                return;
+            }
+
+            if (window.routingControl) {
+                map.removeControl(window.routingControl);
+            }
+
+            window.routingControl = L.Routing.control({
+                waypoints: [
+                    startLatLng,
+                    endLatLng
+                ],
+                routeWhileDragging: true,
+            }).addTo(map);
+        }
+    </script>
+
+</body>
+
+</html>
