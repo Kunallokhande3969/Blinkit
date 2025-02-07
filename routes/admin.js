@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 const { adminModel } = require("../models/admin");
 const { productModel } = require("../models/product");
-const bcrypt = require("bcrypt");
+
 const jwt = require("jsonwebtoken");
 const { validateAdmin } = require("../middlewares/admin");
 const { categoryModel } = require("../models/category");
+const bcrypt = require('bcryptjs');
 
 
 require("dotenv").config();

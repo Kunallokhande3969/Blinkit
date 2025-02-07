@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+const bcrypt = require('bcryptjs');
 
 router.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
-    // prompt: "select_account",
+     prompt: "select_account",
   })
 );
 

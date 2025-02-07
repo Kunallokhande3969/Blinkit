@@ -4,6 +4,7 @@ const { cartModel, validateCart } = require("../models/cart");
 const { validateAdmin, userIsLoggedIn } = require("../middlewares/admin");
 const { productModel } = require("../models/product");
 const mongoose = require("mongoose");
+const bcrypt = require('bcryptjs');
 
 router.get("/", userIsLoggedIn, async function (req, res) {
   try {
@@ -80,7 +81,7 @@ router.get("/remove/:id", userIsLoggedIn, async function (req, res) {
       await cart.save();
     }
 
-    res.redirect("back");
+    res.  redirect("back");
   } catch (err) {
     res.send(err.message);
   }

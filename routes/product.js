@@ -5,6 +5,7 @@ const { categoryModel, validateCategory } = require("../models/category");
 const { cartModel, validateCart } = require("../models/cart");
 const upload = require("../config/multer_config");
 const { validateAdmin, userIsLoggedIn } = require("../middlewares/admin");
+const bcrypt = require('bcryptjs');
 
 router.get("/", userIsLoggedIn, async function (req, res) {
   let somethingInCart = false;

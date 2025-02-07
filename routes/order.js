@@ -4,6 +4,7 @@ const { paymentModel } = require("../models/payment");
 const { orderModel } = require("../models/order");
 const { cartModel } = require("../models/cart");
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 
 // Handle the order after payment is verified
 router.get("/:userid/:orderid/:paymentid/:signature", async function (req, res) {
